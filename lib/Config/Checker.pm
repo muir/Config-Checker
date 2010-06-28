@@ -36,7 +36,9 @@ return eval_line_numbers(<<'END_SOURCE');
 	sub {
 		my ($config, $prototype_string, $where) = @_;
 		$prototype_string =~ s/^(\t+)/" " x length($1) * 8/e;
-		my $proto = Config::YAMLMacros::YAML::Load($prototype_string);
+		my $proto = ref($prototype_string)
+			? $prototype_string
+			: Config::YAMLMacros::YAML::Load($prototype_string);
 
 		my %checker;
 		my $error;
@@ -293,8 +295,8 @@ Config::Checker - Validate configuration objects against a template
 =head1 DESCRIPTION
 
 Config::Checker provides a method for verifying 
-configuration data against a prototype.  The prototype is
-specified in YAML.
+configuration data against a prototype.  The prototype 
+is either a perl object or is a YAML string.
 
 The prototype is structured the same as the configuration
 file (assuming the configuration data is specified in YAML).
